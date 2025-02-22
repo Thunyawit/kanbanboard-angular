@@ -28,6 +28,8 @@
       <br />
       <button (click)="startEdit(task)">Edit</button>
       <button (click)="deleteTask(task.id)">Delete</button>
+      <!-- ปุ่มใหม่สำหรับตั้งสถานะ Task เป็น 'todo' -->
+      <button (click)="setStatusTodo(task)">Set to Done</button>
     </p>
   </ng-template>
 </div>

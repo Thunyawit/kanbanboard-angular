@@ -69,6 +69,17 @@ export class BoardDetailComponent implements OnInit {
     this.editDesc = '';
     this.editStatus = 'todo';
   }
+  // แก้ไขstatuss
+setStatusTodo(task: any) {
+  this.boardService.updateTask(task.id, task.title, task.description, 'done')
+    .subscribe(updatedTask => {
+      const index = this.tasks.findIndex(t => t.id === task.id);
+      if (index !== -1) {
+        this.tasks[index] = updatedTask;  // อัปเดตใน array
+      }
+    });
+}
+
 
   // บันทึกการแก้ไข Task
   saveEdit(taskId: number) {
