@@ -104,6 +104,33 @@ app.get('/api/boards', async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   });
+
+  // - แก้ไข Board 
+app.put('/api/boards/:boardId', async (req, res) => {
+    const { boardId } = req.params;
+    const { name } = req.body;
+    try {
+      let pool = await sql.connect(config);
+      let result = await pool.request()
+        .input('boardId', sql.Int, boardId)
+        .input('name', sql.VarChar, name)
+        .query(`
+          UPDATE Boards
+          SET name = @name
+          OUTPUT INSERTED.*
+          WHERE id = @boardId
+        `);
+  
+      if (result.recordset.length === 0) {
+        return res.status(404).json({ message: 'Board not found' });
+      }
+      res.json(result.recordset[0]);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
   
   // DELETE /api/boards/:boardId - ลบ Board (พร้อมลบ Task ที่เกี่ยวข้อง)
   app.delete('/api/boards/:boardId', async (req, res) => {
@@ -127,7 +154,7 @@ app.get('/api/boards', async (req, res) => {
     }
   });
   
-  // =========== ส่วนใหม่: จัดการ Tasks ===========
+  // =========== จัดการ Tasks นะครับ ===========
   
   // GET /api/boards/:boardId/tasks - ดึง Task ของบอร์ดนั้น
   app.get('/api/boards/:boardId/tasks', async (req, res) => {

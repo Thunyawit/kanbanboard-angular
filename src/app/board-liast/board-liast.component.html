@@ -1,7 +1,18 @@
 <h2>My Boards</h2>
+
 <div *ngFor="let board of boards">
-  <a [routerLink]="['/boards', board.id]">{{ board.name }}</a>
-  <button (click)="deleteBoard(board.id)">Delete</button>
+  <!-- ถ้า board กำลังแก้ไขอยู่ (editingBoardId ตรงกับ board.id) ให้แสดงฟอร์มแก้ไข -->
+  <div *ngIf="editingBoardId === board.id; else viewBoard">
+    <input type="text" [(ngModel)]="editBoardName" placeholder="Edit Board Name" />
+    <button (click)="saveEditBoard(board.id)">Save</button>
+    <button (click)="cancelEditBoard()">Cancel</button>
+  </div>
+  <!-- โหมดอ่าน -->
+  <ng-template #viewBoard>
+    <a [routerLink]="['/boards', board.id]">{{ board.name }}</a>
+    <button (click)="startEditBoard(board)">Edit</button>
+    <button (click)="deleteBoard(board.id)">Delete</button>
+  </ng-template>
 </div>
 
 <hr />

@@ -1,1 +1,33 @@
-<p>board-detail works!</p>
+<h2>Board #{{ boardId }}</h2>
+
+<!-- ฟอร์มสร้าง Task ใหม่ -->
+<div>
+  <h3>Create Task</h3>
+  <input [(ngModel)]="newTaskTitle" placeholder="Task Title" />
+  <input [(ngModel)]="newTaskDesc" placeholder="Task Description" />
+  <button (click)="createTask()">Add Task</button>
+</div>
+<hr />
+
+<!-- แสดงรายการ Task -->
+<div *ngFor="let task of tasks">
+  <!-- ถ้า task.id ตรงกับ editingTaskId ให้แสดงฟอร์มแก้ไข -->
+  <div *ngIf="editingTaskId === task.id; else readMode">
+    <input [(ngModel)]="editTitle" placeholder="Title" />
+    <input [(ngModel)]="editDesc" placeholder="Description" />
+    <button (click)="saveEdit(task.id)">Save</button>
+    <button (click)="cancelEdit()">Cancel</button>
+  </div>
+
+  <!-- โหมดปกติ (readMode) แสดง Task แบบอ่านอย่างเดียว -->
+  <ng-template #readMode>
+    <p>
+      <strong>{{ task.title }}</strong> ({{ task.status }})
+      <br />
+      {{ task.description }}
+      <br />
+      <button (click)="startEdit(task)">Edit</button>
+      <button (click)="deleteTask(task.id)">Delete</button>
+    </p>
+  </ng-template>
+</div>

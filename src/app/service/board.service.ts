@@ -18,6 +18,10 @@ export class BoardService {
   createBoard(name: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/boards`, { name });
   }
+  updateBoard(boardId: number, name: string): Observable<any> {
+    return this.http.put(`${this.baseUrl}/boards/${boardId}`, { name });
+  }
+  
 
   deleteBoard(boardId: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/boards/${boardId}`);
