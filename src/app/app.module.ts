@@ -8,16 +8,22 @@ import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { BoardListComponent } from './board-liast/board-liast.component';
+import { BoardDetailComponent } from './board-detail/board-detail.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    DashboardComponent
+    DashboardComponent,
+    BoardListComponent,
+    BoardDetailComponent
   ],
   imports: [
     BrowserModule,  ReactiveFormsModule,HttpClientModule,
+    FormsModule, 
     AppRoutingModule
   ],
   providers: [
