@@ -1,0 +1,19 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label>ชื่อผู้ใช้งาน:</label>
+      <input type="text" formControlName="username" />
+    </div>
+    <div>
+      <label>รหัสผ่าน:</label>
+      <input type="password" formControlName="password" />
+    </div>
+    <div>
+      <label>ยืนยันรหัสผ่าน:</label>
+      <input type="password" formControlName="confirmPassword" />
+    </div>
+    <div *ngIf="errorMessage">
+      <p style="color:red;">{{ errorMessage }}</p>
+    </div>
+    <button type="submit">ลงทะเบียน</button>
+  </form>
+  
