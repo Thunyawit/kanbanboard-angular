@@ -11,6 +11,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { BoardListComponent } from './board-liast/board-liast.component';
 import { BoardDetailComponent } from './board-detail/board-detail.component';
 import { FormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,7 @@ import { FormsModule } from '@angular/forms';
   ],
   imports: [
     BrowserModule,  ReactiveFormsModule,HttpClientModule,
-    FormsModule, 
+    FormsModule, DragDropModule ,
     AppRoutingModule
   ],
   providers: [

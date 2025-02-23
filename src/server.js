@@ -173,30 +173,32 @@ app.put('/api/boards/:boardId', async (req, res) => {
   
   // POST /api/tasks - สร้าง Task ใหม่
   app.post('/api/tasks', async (req, res) => {
-    const { boardId, title, description, status } = req.body;
-    try {
-      let pool = await sql.connect(config);
-      let result = await pool.request()
-        .input('boardId', sql.Int, boardId)
-        .input('title', sql.VarChar, title)
-        .input('description', sql.VarChar, description || '')
-        .input('status', sql.VarChar, status || 'todo')
-        .query(`
-          INSERT INTO Tasks (boardId, title, [description], [status])
-          OUTPUT INSERTED.*
-          VALUES (@boardId, @title, @description, @status)
-        `);
-      res.status(201).json(result.recordset[0]);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
-    }
-  });
+  const { boardId, title, description, status, tags } = req.body;
+  try {
+    let pool = await sql.connect(config);
+    let result = await pool.request()
+      .input('boardId', sql.Int, boardId)
+      .input('title', sql.VarChar, title)
+      .input('description', sql.VarChar, description || '')
+      .input('status', sql.VarChar, status || 'todo')
+      .input('tags', sql.VarChar, tags || '')
+      .query(`
+        INSERT INTO Tasks (boardId, title, [description], [status], tags)
+        OUTPUT INSERTED.*
+        VALUES (@boardId, @title, @description, @status, @tags)
+      `);
+    res.status(201).json(result.recordset[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
   
-  // PUT /api/tasks/:taskId - แก้ไข Task (เช่น เปลี่ยน title, description, status)
+  // PUT /api/tasks/:taskId - แก้ไข Task 
   app.put('/api/tasks/:taskId', async (req, res) => {
     const { taskId } = req.params;
-    const { title, description, status } = req.body;
+    const { title, description, status, tags } = req.body;
     try {
       let pool = await sql.connect(config);
       let result = await pool.request()
@@ -204,15 +206,16 @@ app.put('/api/boards/:boardId', async (req, res) => {
         .input('title', sql.VarChar, title)
         .input('description', sql.VarChar, description)
         .input('status', sql.VarChar, status)
+        .input('tags', sql.VarChar, tags)
         .query(`
           UPDATE Tasks
           SET title = @title,
               [description] = @description,
-              [status] = @status
+              [status] = @status,
+              tags = @tags
           OUTPUT INSERTED.*
           WHERE id = @taskId
         `);
-  
       if (result.recordset.length === 0) {
         return res.status(404).json({ message: 'Task not found' });
       }
@@ -222,6 +225,7 @@ app.put('/api/boards/:boardId', async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   });
+  
   
   // DELETE /api/tasks/:taskId - ลบ Task
   app.delete('/api/tasks/:taskId', async (req, res) => {

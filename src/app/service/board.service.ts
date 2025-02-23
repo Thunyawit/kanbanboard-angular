@@ -28,19 +28,19 @@ export class BoardService {
   }
 
   // 2) Task
-  getTasks(boardId: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/boards/${boardId}/tasks`);
+  createTask(boardId: number, title: string, description: string, status: string = 'todo', tags: string = ''): Observable<any> {
+    return this.http.post(`${this.baseUrl}/tasks`, { boardId, title, description, status, tags });
   }
 
-  createTask(boardId: number, title: string, description: string, status: string = 'todo'): Observable<any> {
-    return this.http.post(`${this.baseUrl}/tasks`, { boardId, title, description, status });
-  }
-
-  updateTask(taskId: number, title: string, description: string, status: string): Observable<any> {
-    return this.http.put(`${this.baseUrl}/tasks/${taskId}`, { title, description, status });
+  updateTask(taskId: number, title: string, description: string, status: string, tags: string): Observable<any> {
+    return this.http.put(`${this.baseUrl}/tasks/${taskId}`, { title, description, status, tags });
   }
 
   deleteTask(taskId: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/tasks/${taskId}`);
+  }
+
+  getTasks(boardId: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/boards/${boardId}/tasks`);
   }
 }

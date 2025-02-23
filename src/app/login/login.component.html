@@ -1,20 +1,37 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <div>
-      <label>ชื่อผู้ใช้งาน:</label>
-      <input type="text" formControlName="username" />
+<div class="container mt-5" style="max-width: 400px;">
+    <div class="card shadow">
+      <div class="card-body">
+        <h3 class="card-title text-center mb-4">เข้าสู่ระบบ</h3>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="username" class="form-label">ชื่อผู้ใช้งาน:</label>
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">รหัสผ่าน:</label>
+            <input
+              type="password"
+              id="password"
+              formControlName="password"
+              class="form-control"
+            />
+          </div>
+          <div *ngIf="errorMessage" class="alert alert-danger p-2">
+            {{ errorMessage }}
+          </div>
+          <button type="submit" class="btn btn-primary w-100">เข้าสู่ระบบ</button>
+        </form>
+        <hr />
+        <p class="text-center">
+          หากยังไม่มีบัญชี?
+          <a routerLink="/register">ลงทะเบียน</a>
+        </p>
+      </div>
     </div>
-    <div>
-      <label>รหัสผ่าน:</label>
-      <input type="password" formControlName="password" />
-    </div>
-    <div *ngIf="errorMessage">
-      <p style="color:red;">{{ errorMessage }}</p>
-    </div>
-    <button type="submit">เข้าสู่ระบบ</button>
-  </form>
-
-  <p>
-    หากยังไม่มีบัญชี?
-    <a routerLink="/register">ลงทะเบียน</a>
-  </p>
+  </div>
   

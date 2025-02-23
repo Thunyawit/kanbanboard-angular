@@ -1,22 +1,62 @@
-<h2>My Boards</h2>
-
-<div *ngFor="let board of boards">
-  <!-- ถ้า board กำลังแก้ไขอยู่ (editingBoardId ตรงกับ board.id) ให้แสดงฟอร์มแก้ไข -->
-  <div *ngIf="editingBoardId === board.id; else viewBoard">
-    <input type="text" [(ngModel)]="editBoardName" placeholder="Edit Board Name" />
-    <button (click)="saveEditBoard(board.id)">Save</button>
-    <button (click)="cancelEditBoard()">Cancel</button>
+<div class="container mt-4" style="max-width: 800px;">
+    <h2 class="mb-4 text-center">My Boards</h2>
+  
+    <!-- ฟอร์มสร้างบอร์ดใหม่ -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4 class="card-title">Create New Board</h4>
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            [(ngModel)]="newBoardName"
+            class="form-control"
+            placeholder="Board Name"
+          />
+          <button class="btn btn-primary" (click)="createBoard()">Create Board</button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- แสดงรายการบอร์ด -->
+    <div class="list-group">
+      <div
+        *ngFor="let board of boards"
+        class="list-group-item d-flex justify-content-between align-items-center mb-2"
+      >
+        <!-- โหมดแก้ไขบอร์ด -->
+        <div *ngIf="editingBoardId === board.id; else viewBoard" class="w-100">
+          <div class="input-group">
+            <input
+              type="text"
+              [(ngModel)]="editBoardName"
+              class="form-control"
+              placeholder="Edit Board Name"
+            />
+            <button class="btn btn-success" (click)="saveEditBoard(board.id)">Save</button>
+            <button class="btn btn-secondary" (click)="cancelEditBoard()">Cancel</button>
+          </div>
+        </div>
+  
+        <!-- โหมดอ่าน (view mode) -->
+        <ng-template #viewBoard>
+          <div class="flex-grow-1 me-3">
+            <a
+              [routerLink]="['/boards', board.id]"
+              class="text-decoration-none fw-semibold"
+            >
+              {{ board.name }}
+            </a>
+          </div>
+          <div>
+            <button class="btn btn-sm btn-primary me-2" (click)="startEditBoard(board)">
+              Edit
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="deleteBoard(board.id)">
+              Delete
+            </button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
   </div>
-  <!-- โหมดอ่าน -->
-  <ng-template #viewBoard>
-    <a [routerLink]="['/boards', board.id]">{{ board.name }}</a>
-    <button (click)="startEditBoard(board)">Edit</button>
-    <button (click)="deleteBoard(board.id)">Delete</button>
-  </ng-template>
-</div>
-
-<hr />
-
-<h3>Create New Board</h3>
-<input type="text" [(ngModel)]="newBoardName" placeholder="Board Name" />
-<button (click)="createBoard()">Create Board</button>
+  

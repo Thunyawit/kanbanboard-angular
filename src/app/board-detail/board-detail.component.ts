@@ -9,16 +9,17 @@ import { BoardService } from '../service/board.service';
 export class BoardDetailComponent implements OnInit {
   boardId!: number;
   tasks: any[] = [];
-
-  // ฟอร์มสร้าง Task ใหม่
+  
   newTaskTitle: string = '';
   newTaskDesc: string = '';
+  newTaskTags: string = '';
 
-  // สำหรับแก้ไข Task
-  editingTaskId: number | null = null;  // เก็บ id ของ Task ที่กำลังแก้
+  // สำหรับ Edit Task
+  editingTaskId: number | null = null;
   editTitle: string = '';
   editDesc: string = '';
-  editStatus: string = 'todo'; // ถ้าต้องการแก้ status ด้วย
+  editStatus: string = 'todo';
+  editTags: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -38,64 +39,63 @@ export class BoardDetailComponent implements OnInit {
 
   createTask() {
     if (!this.newTaskTitle) return;
-    this.boardService.createTask(this.boardId, this.newTaskTitle, this.newTaskDesc, 'todo')
+    this.boardService.createTask(this.boardId, this.newTaskTitle, this.newTaskDesc, 'todo', this.newTaskTags)
       .subscribe(newTask => {
         this.tasks.push(newTask);
         this.newTaskTitle = '';
         this.newTaskDesc = '';
+        this.newTaskTags = '';
+        this.loadTasks();
       });
   }
 
   deleteTask(taskId: number) {
     this.boardService.deleteTask(taskId).subscribe(() => {
       this.tasks = this.tasks.filter(t => t.id !== taskId);
+      this.loadTasks();
     });
   }
 
-  // ----------- ฟังก์ชันสำหรับ Edit Task -----------
-
-  // เริ่มแก้ไข Task
   startEdit(task: any) {
     this.editingTaskId = task.id;
     this.editTitle = task.title;
     this.editDesc = task.description;
-    this.editStatus = task.status; // ถ้าต้องการแก้ status ด้วย
+    this.editStatus = task.status;
+    this.editTags = task.tags;
   }
 
-  // ยกเลิกการแก้ไข
   cancelEdit() {
     this.editingTaskId = null;
     this.editTitle = '';
     this.editDesc = '';
     this.editStatus = 'todo';
+    this.editTags = '';
   }
-  // แก้ไขstatuss
-setStatusTodo(task: any) {
-  this.boardService.updateTask(task.id, task.title, task.description, 'done')
-    .subscribe(updatedTask => {
-      const index = this.tasks.findIndex(t => t.id === task.id);
-      if (index !== -1) {
-        this.tasks[index] = updatedTask;  // อัปเดตใน array
-      }
-    });
-}
 
-
-  // บันทึกการแก้ไข Task
   saveEdit(taskId: number) {
-    // เรียก service อัปเดต Task ในฐานข้อมูล
-    this.boardService.updateTask(taskId, this.editTitle, this.editDesc, this.editStatus)
+    this.boardService.updateTask(taskId, this.editTitle, this.editDesc, this.editStatus, this.editTags)
       .subscribe(updatedTask => {
-        // อัปเดตข้อมูลใน tasks array
         const index = this.tasks.findIndex(t => t.id === taskId);
         if (index !== -1) {
           this.tasks[index] = updatedTask;
         }
-        // รีเซ็ตโหมดแก้ไข
         this.editingTaskId = null;
         this.editTitle = '';
         this.editDesc = '';
         this.editStatus = 'todo';
+        this.editTags = '';
+        this.loadTasks();
+      });
+  }
+
+  setStatusDone(task: any) {
+    // เปลี่ยนสถานะเป็น 'done' แต่คง title, description และ tags เดิมไว้
+    this.boardService.updateTask(task.id, task.title, task.description, 'done', task.tags)
+      .subscribe(updatedTask => {
+        const index = this.tasks.findIndex(t => t.id === task.id);
+        if (index !== -1) {
+          this.tasks[index] = updatedTask;
+        }
       });
   }
 }

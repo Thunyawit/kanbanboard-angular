@@ -1,19 +1,41 @@
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <div>
-      <label>ชื่อผู้ใช้งาน:</label>
-      <input type="text" formControlName="username" />
+<div class="container mt-5" style="max-width: 400px;">
+    <div class="card shadow">
+      <div class="card-body">
+        <h3 class="card-title text-center mb-4">ลงทะเบียน</h3>
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="username" class="form-label">ชื่อผู้ใช้งาน:</label>
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">รหัสผ่าน:</label>
+            <input
+              type="password"
+              id="password"
+              formControlName="password"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">ยืนยันรหัสผ่าน:</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              class="form-control"
+            />
+          </div>
+          <div *ngIf="errorMessage" class="alert alert-danger p-2">
+            {{ errorMessage }}
+          </div>
+          <button type="submit" class="btn btn-primary w-100">ลงทะเบียน</button>
+        </form>
+      </div>
     </div>
-    <div>
-      <label>รหัสผ่าน:</label>
-      <input type="password" formControlName="password" />
-    </div>
-    <div>
-      <label>ยืนยันรหัสผ่าน:</label>
-      <input type="password" formControlName="confirmPassword" />
-    </div>
-    <div *ngIf="errorMessage">
-      <p style="color:red;">{{ errorMessage }}</p>
-    </div>
-    <button type="submit">ลงทะเบียน</button>
-  </form>
+  </div>
   

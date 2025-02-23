@@ -1,35 +1,59 @@
-<h2>Board #{{ boardId }}</h2>
-
-<!-- ฟอร์มสร้าง Task ใหม่ -->
-<div>
-  <h3>Create Task</h3>
-  <input [(ngModel)]="newTaskTitle" placeholder="Task Title" />
-  <input [(ngModel)]="newTaskDesc" placeholder="Task Description" />
-  <button (click)="createTask()">Add Task</button>
-</div>
-<hr />
-
-<!-- แสดงรายการ Task -->
-<div *ngFor="let task of tasks">
-  <!-- ถ้า task.id ตรงกับ editingTaskId ให้แสดงฟอร์มแก้ไข -->
-  <div *ngIf="editingTaskId === task.id; else readMode">
-    <input [(ngModel)]="editTitle" placeholder="Title" />
-    <input [(ngModel)]="editDesc" placeholder="Description" />
-    <button (click)="saveEdit(task.id)">Save</button>
-    <button (click)="cancelEdit()">Cancel</button>
+<div class="container mt-4" style="max-width: 800px;">
+    <h2 class="mb-4 text-center">Board #{{ boardId }}</h2>
+  
+    <!-- ฟอร์มสร้าง Task ใหม่ -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4 class="card-title">Create Task</h4>
+        <div class="mb-3">
+          <input [(ngModel)]="newTaskTitle" placeholder="Task Title" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <input [(ngModel)]="newTaskDesc" placeholder="Task Description" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <input [(ngModel)]="newTaskTags" placeholder="Tags " class="form-control" />
+        </div>
+        <button (click)="createTask()" class="btn btn-primary">Add Task</button>
+      </div>
+    </div>
+  
+    <!-- รายการ Task -->
+    <div class="list-group">
+      <div *ngFor="let task of tasks" class="list-group-item mb-2">
+        <!-- โหมดแก้ไข -->
+        <div *ngIf="editingTaskId === task.id; else readMode">
+          <div class="mb-2">
+            <input [(ngModel)]="editTitle" placeholder="Title" class="form-control" />
+          </div>
+          <div class="mb-2">
+            <input [(ngModel)]="editDesc" placeholder="Description" class="form-control" />
+          </div>
+          <div class="mb-2">
+            <input [(ngModel)]="editTags" placeholder="Tags (comma separated)" class="form-control" />
+          </div>
+          <div>
+            <button (click)="saveEdit(task.id)" class="btn btn-success me-2">Save</button>
+            <button (click)="cancelEdit()" class="btn btn-secondary">Cancel</button>
+          </div>
+        </div>
+        
+        <!-- โหมดอ่าน -->
+        <ng-template #readMode>
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="mb-1">{{ task.title }} <small class="text-muted">({{ task.status }})</small></h5>
+              <p class="mb-1">{{ task.description }}</p>
+              <small class="text-muted">Tags: {{ task.tags }}</small>
+            </div>
+            <div>
+              <button (click)="startEdit(task)" class="btn btn-sm btn-primary me-1">Edit</button>
+              <button (click)="deleteTask(task.id)" class="btn btn-sm btn-danger me-1">Delete</button>
+              <button (click)="setStatusDone(task)" class="btn btn-sm btn-success">Set to DONE</button>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
   </div>
-
-  <!-- โหมดปกติ (readMode) แสดง Task แบบอ่านอย่างเดียว -->
-  <ng-template #readMode>
-    <p>
-      <strong>{{ task.title }}</strong> ({{ task.status }})
-      <br />
-      {{ task.description }}
-      <br />
-      <button (click)="startEdit(task)">Edit</button>
-      <button (click)="deleteTask(task.id)">Delete</button>
-      <!-- ปุ่มใหม่สำหรับตั้งสถานะ Task เป็น 'todo' -->
-      <button (click)="setStatusTodo(task)">Set to Done</button>
-    </p>
-  </ng-template>
-</div>
+  
